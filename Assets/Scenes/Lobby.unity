@@ -1992,7 +1992,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   networkManager: {fileID: 2106853025}
   uiInputs: {fileID: 1954605750}
-  dataSaveColor: {fileID: 0}
+  dataSaveColor: {fileID: 131191528}
 --- !u!4 &838982830
 Transform:
   m_ObjectHideFlags: 0

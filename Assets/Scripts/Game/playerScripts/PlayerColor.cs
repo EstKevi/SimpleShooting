@@ -1,78 +1,77 @@
-using System;
-using UnityEngine;
 using Mirror;
+using UnityEngine;
 
-public class PlayerColor : NetworkBehaviour
+namespace Game.playerScripts
 {
-    [SyncVar(hook = nameof(OnColorChange))]
-    private Color playerColor;
-
-    private DataSaveColor dataSaveColor;
-
-    public SpriteRenderer playerSprite;
-
-    private void Awake()
+    public class PlayerColor : NetworkBehaviour
     {
-        playerSprite = GetComponent<SpriteRenderer>();
-        dataSaveColor = FindObjectOfType<DataSaveColor>();
-        if (isLocalPlayer)
+        [SyncVar(hook = nameof(OnColorChange))]
+        private Color playerColor;
+
+        private DataSaveColor dataSaveColor;
+
+        public SpriteRenderer playerSprite;
+
+        private void Awake()
         {
+            playerSprite = GetComponent<SpriteRenderer>();
+            dataSaveColor = FindObjectOfType<DataSaveColor>();
             playerColor = dataSaveColor.Color;
+            playerSprite.color = dataSaveColor.Color;
         }
-    }
 
-    private void Start()
-    {
-        if (isLocalPlayer)
+        private void Start()
         {
-
-            SetPlayerColor(dataSaveColor.Color);
+            if (isLocalPlayer)
+            {
+                SetPlayerColor(dataSaveColor.Color);
+            }
+            else
+            {
+                SetRendererColor(playerColor);
+            }
         }
-        else
+
+        public void SetPlayerColor(Color color)
         {
-            SetRendererColor(playerColor);
-        }
-    }
+            if (!isLocalPlayer)
+            {
+                return;
+            }
 
-    public void SetPlayerColor(Color color)
-    {
-        if (!isLocalPlayer)
+            CmdSetColor(color);
+        }
+
+        [Command]
+        private void CmdSetColor(Color color)
         {
-            return;
+            playerColor = color;
+
+            RpcSetColor(color);
         }
 
-        CmdSetColor(color);
-    }
-
-    [Command]
-    private void CmdSetColor(Color color)
-    {
-        playerColor = color;
-
-        RpcSetColor(color);
-    }
-
-    [ClientRpc]
-    private void RpcSetColor(Color color)
-    {
-        if (!isLocalPlayer)
+        [ClientRpc]
+        private void RpcSetColor(Color color)
         {
-            SetRendererColor(color);
+            if (!isLocalPlayer)
+            {
+                SetRendererColor(color);
+            }
         }
-    }
 
-    private void SetRendererColor(Color color)
-    {
-        playerSprite.color = color;
-    }
-
-    private void OnColorChange(Color oldColor, Color newColor)
-    {
-        if (isLocalPlayer)
+        private void SetRendererColor(Color color)
         {
-            return;
+            playerSprite.color = color;
         }
 
-        SetRendererColor(newColor);
+        private void OnColorChange(Color oldColor, Color newColor)
+        {
+            if (isLocalPlayer)
+            {
+                return;
+            }
+
+            SetRendererColor(newColor);
+        }
     }
 }
