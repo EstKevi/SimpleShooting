@@ -147,10 +147,13 @@ MonoBehaviour:
   syncMode: 0
   syncInterval: 0
   speed: 3500
+  delayShoot: 0.6
   playerMove: {fileID: 2217076518504838947}
   joystick: {fileID: 0}
   playerWeapon: {fileID: -5718779829540330974}
   playerHealth: {fileID: 5528207287537814181}
+  playerColor: {fileID: -5628052502236219965}
+  window: {fileID: 0}
 --- !u!114 &2217076518504838947
 MonoBehaviour:
   m_ObjectHideFlags: 0
