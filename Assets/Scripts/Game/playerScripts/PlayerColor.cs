@@ -9,8 +9,9 @@ namespace Game.playerScripts
         private Color playerColor;
 
         private DataSaveColor dataSaveColor;
-
         public SpriteRenderer playerSprite;
+
+        public Color Color => dataSaveColor.Color;
 
         private void Awake()
         {
