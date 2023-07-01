@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 2217076518504839004}
   - component: {fileID: 2217076518504838947}
   - component: {fileID: -5718779829540330974}
+  - component: {fileID: 5528207287537814181}
   - component: {fileID: -5628052502236219965}
   - component: {fileID: 2217076518504838946}
   - component: {fileID: 2217076518504838945}
@@ -149,6 +150,7 @@ MonoBehaviour:
   playerMove: {fileID: 2217076518504838947}
   joystick: {fileID: 0}
   playerWeapon: {fileID: -5718779829540330974}
+  playerHealth: {fileID: 5528207287537814181}
 --- !u!114 &2217076518504838947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -178,7 +180,23 @@ MonoBehaviour:
   syncInterval: 0
   boll: {fileID: 5651756461176314560, guid: 923066478a7febb409122e041048587b, type: 3}
   power: 1000
-  lifeTime: 1
+  lifeTime: 10
+--- !u!114 &5528207287537814181
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2217076518504838951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9caaefe6134424147a0e48fa13fd2685, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  syncDirection: 0
+  syncMode: 0
+  syncInterval: 0
+  health: 100
 --- !u!114 &-5628052502236219965
 MonoBehaviour:
   m_ObjectHideFlags: 0

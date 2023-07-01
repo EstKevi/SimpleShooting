@@ -28,7 +28,7 @@ namespace Game.playerScripts
             }
             else
             {
-                SetRendererColor(playerColor);
+                playerSprite.color = playerColor;
             }
         }
 
@@ -55,13 +55,8 @@ namespace Game.playerScripts
         {
             if (!isLocalPlayer)
             {
-                SetRendererColor(color);
+                playerSprite.color = playerColor;
             }
-        }
-
-        private void SetRendererColor(Color color)
-        {
-            playerSprite.color = color;
         }
 
         private void OnColorChange(Color oldColor, Color newColor)
@@ -71,7 +66,7 @@ namespace Game.playerScripts
                 return;
             }
 
-            SetRendererColor(newColor);
+            playerSprite.color = playerColor;
         }
     }
 }

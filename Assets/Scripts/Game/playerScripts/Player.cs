@@ -1,4 +1,3 @@
-using System;
 using Mirror;
 using UnityEngine;
 
@@ -10,6 +9,7 @@ namespace Game.playerScripts
         [SerializeField] private PlayerMove playerMove;
         [SerializeField] private Joystick joystick;
         [SerializeField] private PlayerWeapon playerWeapon;
+        [SerializeField] private PlayerHealth playerHealth;
         private Vector2 direction = new(0.5f,1);
 
         private void Awake()

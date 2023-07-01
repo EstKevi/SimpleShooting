@@ -10,9 +10,10 @@ namespace Game
     {
         private new Rigidbody2D rigidbody2D;
         [SerializeField] private GameObject parent;
+        [SerializeField] private int damage;
         private void Awake() => rigidbody2D ??= GetComponent<Rigidbody2D>();
 
-        public void Kick(Vector2 direction, float power, GameObject parentBoll = null)
+        public void Kick(Vector2 direction, float power, GameObject parentBoll)
         {
             parent = parentBoll;
             rigidbody2D.AddForce(direction * power);
@@ -27,7 +28,13 @@ namespace Game
                     return;
                 }
                 if(isServer)
+                {
+                    if(other.gameObject.TryGetComponent<PlayerHealth>(out var player))
+                    {
+                        player.MakeDamage(damage);
+                    }
                     NetworkServer.Destroy(gameObject);
+                }
             }
         }
     }
