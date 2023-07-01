@@ -1,3 +1,4 @@
+using System;
 using Mirror;
 using UnityEngine;
 
@@ -9,11 +10,21 @@ namespace Game.playerScripts
         [SerializeField] private PlayerMove playerMove;
         [SerializeField] private Joystick joystick;
         [SerializeField] private PlayerWeapon playerWeapon;
+        [SerializeField] private EntryPoint entryPoint;
+
+        private SpriteRenderer spriteRenderer;
         private Vector2 direction = new(0.5f,1);
 
         private void Awake()
         {
             joystick = FindObjectOfType<Joystick>();
+            entryPoint = FindObjectOfType<EntryPoint>();
+        }
+
+        private void Start()
+        {
+            spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.color = entryPoint.PlayerColor;
         }
 
         private void Update()

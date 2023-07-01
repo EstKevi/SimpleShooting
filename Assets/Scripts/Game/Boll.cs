@@ -1,3 +1,4 @@
+using System;
 using Game.playerScripts;
 using Mirror;
 using UnityEngine;
@@ -7,14 +8,13 @@ namespace Game
     [RequireComponent(typeof(Rigidbody2D))]
     public class Boll : NetworkBehaviour
     {
-        [SerializeField] private float lifeTime;
         private new Rigidbody2D rigidbody2D;
-        private GameObject parent;
+        [SerializeField] private GameObject parent;
         private void Awake() => rigidbody2D ??= GetComponent<Rigidbody2D>();
 
-        public void Kick(Vector2 direction, float power, GameObject parent = null)
+        public void Kick(Vector2 direction, float power, GameObject parentBoll = null)
         {
-            this.parent = parent;
+            parent = parentBoll;
             rigidbody2D.AddForce(direction * power);
         }
 
@@ -26,7 +26,8 @@ namespace Game
                 {
                     return;
                 }
-                Destroy(gameObject);
+                if(isServer)
+                    NetworkServer.Destroy(gameObject);
             }
         }
     }

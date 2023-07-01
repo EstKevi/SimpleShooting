@@ -1,15 +1,20 @@
-﻿using System;
-using Mirror;
+﻿using Mirror;
+using UnityEngine;
 
 namespace Game
 {
-    public class EntryPoint : NetworkBehaviour
+    public class EntryPoint : MonoBehaviour
     {
         private NetworkManager networkManager;
+        private DataSave dataSave;
+
+        public Color PlayerColor => dataSave.Color;
 
         private void Awake()
         {
-            networkManager ??= FindObjectOfType<NetworkManager>();
+            dataSave = FindObjectOfType<DataSave>();
+            networkManager = FindObjectOfType<NetworkManager>();
+            Debug.Log(PlayerColor);
         }
     }
 }

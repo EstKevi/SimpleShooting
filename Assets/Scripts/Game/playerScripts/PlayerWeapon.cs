@@ -9,27 +9,34 @@ namespace Game.playerScripts
         [SerializeField] private GameObject boll;
         [SerializeField] private float power;
         [SerializeField] private float lifeTime;
+        private Vector2 direction;
 
-        public void Shoot(Vector2 direction) => CmdSpawnBoll(direction);
+        public void Shoot(Vector2 direction)
+        {
+            if(isLocalPlayer is false) return;
+            this.direction = direction;
+            CmdSpawnBoll();
+        }
 
         [Command]
-        private void CmdSpawnBoll(Vector2 direction)
+        private void CmdSpawnBoll()
         {
-            // var bollPrefab = Instantiate(boll, transform.position, transform.rotation);
-            
             var bollPrefab = Instantiate(boll, transform.position , transform.rotation);
+            NetworkServer.Spawn(bollPrefab);
+            
             if (bollPrefab.TryGetComponent<Boll>(out var isBoll))
             {
                 isBoll.Kick(direction, power,gameObject);
             }
-            NetworkServer.Spawn(bollPrefab);
+            
             StartCoroutine(Destroy(bollPrefab));
         }
 
         private IEnumerator Destroy(GameObject bollPrefab)
         {
             yield return new WaitForSeconds(lifeTime);
-            NetworkServer.Destroy(bollPrefab);
+            if(isServer)
+                NetworkServer.Destroy(bollPrefab);
         }
     }
 }

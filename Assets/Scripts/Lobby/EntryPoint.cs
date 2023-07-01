@@ -10,6 +10,7 @@ namespace Lobby
     {
         [SerializeField] private NetworkManager networkManager;
         [SerializeField] private UiInputs uiInputs;
+        [SerializeField] private DataSave dataSave;
         
         private void Awake()
         {
@@ -17,7 +18,8 @@ namespace Lobby
             
             uiInputs.startGameButtonClicked.AddListener(data =>
             {
-                // networkManager.networkAddress = data.nameAddress;
+
+                dataSave.Color = data.color;
                 
                 switch (data.networkType)
                 {
@@ -31,6 +33,7 @@ namespace Lobby
                         throw new ArgumentOutOfRangeException();
                 }
             });
+            DontDestroyOnLoad(dataSave);
         }
     }
 }
