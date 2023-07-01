@@ -10,28 +10,11 @@ namespace Game.playerScripts
         [SerializeField] private PlayerMove playerMove;
         [SerializeField] private Joystick joystick;
         [SerializeField] private PlayerWeapon playerWeapon;
-        
-        private SpriteRenderer spriteRenderer;
         private Vector2 direction = new(0.5f,1);
 
         private void Awake()
         {
             joystick = FindObjectOfType<Joystick>();
-            spriteRenderer = GetComponent<SpriteRenderer>();
-        }
-
-        private void Start()
-        {
-            if(!isLocalPlayer || NetworkServer.active is false) return;
-            var data = FindObjectOfType<DataSave>();
-            spriteRenderer.color = data.Color;
-            RpcChangeColorOnServer(spriteRenderer.color);
-        }
-
-        [ClientRpc]
-        private void RpcChangeColorOnServer(Color color)
-        {
-            spriteRenderer.color = color;
         }
 
         private void Update()

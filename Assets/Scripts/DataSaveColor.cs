@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class DataSave : MonoBehaviour
+public class DataSaveColor : MonoBehaviour
 {
     public Color Color { get; set; }
 }
