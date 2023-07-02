@@ -56,11 +56,11 @@ namespace Game.playerScripts
             death.Invoke();
         }
 
-        [ClientRpc]
+        [TargetRpc]
         public void RpcChangeHealthUi(int damage)
         {
             if(isLocalPlayer);
-            playerUi.UiValueHealth -= damage;
+                playerUi.UiValueHealth -= damage;
         }
 
         private void Update()
