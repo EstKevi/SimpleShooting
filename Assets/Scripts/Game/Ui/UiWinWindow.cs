@@ -13,10 +13,9 @@ namespace Game.Ui
         public void SetActiveWinWindow(bool state) => window.SetActive(state);
 
         public void SetParams(Color color, int coins)
-        {playerColor.color = color;
-            if(coins == 0) return;
+        {
+            playerColor.color = color;
             countCoins.text = coins.ToString();
-            
         }
     }
 }

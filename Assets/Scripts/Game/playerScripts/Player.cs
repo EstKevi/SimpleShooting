@@ -16,10 +16,14 @@ namespace Game.playerScripts
         [SerializeField] private PlayerHealth playerHealth;
         [SerializeField] private PlayerColor playerColor;
         [SerializeField] private UiWinWindow window;
+        
         [SyncVar]
         [SerializeField]private int coins;
+        [SyncVar]
+        [SerializeField] private bool isDead;
 
         public int Coins => coins;
+        public bool IsDead => isDead;
     
         private Vector2 direction = new(0.5f,1);
         private float prShoot;
@@ -35,10 +39,7 @@ namespace Game.playerScripts
             window = FindObjectOfType<UiWinWindow>();
             death.AddListener(() =>
             {
-                // if (isServer)
-                // {
-                //     
-                // }
+                isDead = true;
             });
         }
 
@@ -60,16 +61,14 @@ namespace Game.playerScripts
             }
         }
 
-        public void ShowCanvas(Color winColor, int winCountCoins)
+        [ClientRpc]
+        public void RpcShowCanvas(Color winColor, int winCountCoins)
         {
             if(isLocalPlayer)
-                CmdShowCanvas( winColor, winCountCoins);
-        }
-        [Command]
-        private void CmdShowCanvas(Color winColor, int winCountCoins)
-        {
-            window.SetParams(winColor,winCountCoins);
-            window.SetActiveWinWindow(true);
+            {
+                window.SetParams(winColor, winCountCoins);
+                window.SetActiveWinWindow(true);
+            }
             if(isServer)
                 NetworkServer.Destroy(gameObject);
         }

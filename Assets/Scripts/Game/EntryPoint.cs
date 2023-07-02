@@ -11,6 +11,8 @@ namespace Game
     {
         [SerializeField] private UiWinWindow window;
         [SerializeField] private float delay;
+        private Player playerWin;
+        
         private NetworkConnectionToClient lol;
         private readonly List<NetworkConnectionToClient> players = new();
         private void Awake() => NetworkServer.OnConnectedEvent += AddPlayer;
@@ -20,12 +22,6 @@ namespace Game
             if(isServer is false) return;
             players.Add(player);
             StartCoroutine(AsyncAddListener(player));
-        }
-
-        private void Win(Player player)
-        {
-            window.SetParams(player.PlayerColor, player.Coins);
-            window.SetActiveWinWindow(true);
         }
 
         private void OnDestroy() => NetworkServer.OnConnectedEvent -= AddPlayer;
@@ -45,16 +41,15 @@ namespace Game
             
             foreach (var player in players)
             {
-                if (player.identity != null)
+                if (player.identity.TryGetComponent<Player>(out var playerObj))
                 {
-                    if(player.identity.TryGetComponent<Player>(out var winPlayer))
-                        Win(winPlayer);
-                    continue;
-                }
-                
-                if(player.identity.TryGetComponent<Player>(out var losePlayer))
-                {
-                    losePlayer.ShowCanvas(losePlayer.PlayerColor,1);
+                    if (playerObj.IsDead is false)
+                    {
+                        playerWin = playerObj;
+                        playerObj.RpcShowCanvas(playerObj.PlayerColor, playerObj.Coins);
+                    }
+
+                    playerObj.RpcShowCanvas(playerWin.PlayerColor, playerWin.Coins);
                 }
             }
         } 
