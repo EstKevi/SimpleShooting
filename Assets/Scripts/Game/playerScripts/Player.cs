@@ -15,7 +15,7 @@ namespace Game.playerScripts
         [SerializeField] private PlayerWeapon playerWeapon;
         [SerializeField] private PlayerHealth playerHealth;
         [SerializeField] private PlayerColor playerColor;
-        [SerializeField] private UiWinWindow window;
+        [SerializeField] private UiWinWindow playerUi;
         
         [SyncVar]
         [SerializeField]private int coins;
@@ -36,10 +36,19 @@ namespace Game.playerScripts
         {
             death = playerHealth.playerDeath;
             joystick = FindObjectOfType<Joystick>();
-            window = FindObjectOfType<UiWinWindow>();
+            playerUi = FindObjectOfType<UiWinWindow>();
+
+            playerUi.SetMaxHealthPlayer(playerHealth.Health);
+            
             death.AddListener(() =>
             {
-                isDead = true;
+                if(isLocalPlayer)
+                    isDead = true;
+            });
+            
+            playerHealth.playerTakeDamage.AddListener(d =>
+            {
+                playerUi.UiValueHealth -= d;
             });
         }
 
@@ -66,13 +75,17 @@ namespace Game.playerScripts
         {
             if(isLocalPlayer)
             {
-                window.SetParams(winColor, winCountCoins);
-                window.SetActiveWinWindow(true);
+                playerUi.SetParams(winColor, winCountCoins);
+                playerUi.SetActiveWinWindow(true);
             }
-            if(isServer)
-                NetworkServer.Destroy(gameObject);
+            // if(isServer)
+            //     NetworkServer.Destroy(gameObject);
         }
 
-        public void TakeCoin() => coins++;
+        public void TakeCoin()
+        {
+            coins++;
+            playerUi.CountCoin = coins;
+        }
     }
 }

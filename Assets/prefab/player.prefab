@@ -154,6 +154,8 @@ MonoBehaviour:
   playerHealth: {fileID: 5528207287537814181}
   playerColor: {fileID: -5628052502236219965}
   window: {fileID: 0}
+  coins: 0
+  isDead: 0
 --- !u!114 &2217076518504838947
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,7 +185,7 @@ MonoBehaviour:
   syncInterval: 0
   boll: {fileID: 5651756461176314560, guid: 923066478a7febb409122e041048587b, type: 3}
   power: 1000
-  lifeTime: 1
+  lifeTime: 5
 --- !u!114 &5528207287537814181
 MonoBehaviour:
   m_ObjectHideFlags: 0

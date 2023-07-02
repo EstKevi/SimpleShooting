@@ -1,7 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using Game.playerScripts;
-using Game.Ui;
 using Mirror;
 using UnityEngine;
 
@@ -9,9 +9,9 @@ namespace Game
 {
     public class EntryPoint : NetworkBehaviour
     {
-        [SerializeField] private UiWinWindow window;
-        [SerializeField] private float delay;
-        private Player playerWin;
+        [SerializeField] private float delayFoundWinners;
+        [SerializeField] private float delayAddPlayer;
+        [SerializeField] private WinnerParams winner;
         
         private NetworkConnectionToClient lol;
         private readonly List<NetworkConnectionToClient> players = new();
@@ -28,30 +28,53 @@ namespace Game
 
         private IEnumerator AsyncAddListener(NetworkConnectionToClient playerClient)
         {
-            yield return new WaitForSecondsRealtime(delay);
+            yield return new WaitForSecondsRealtime(delayAddPlayer);
             if(playerClient.identity.TryGetComponent<Player>(out var playerDeath))
             {
-                playerDeath.death.AddListener(FoundWinnerAndWin);
+                playerDeath.death.AddListener(() => StartCoroutine(FoundWinnerAndWin()));
             }
         }
 
-        private void FoundWinnerAndWin()
+        private IEnumerator FoundWinnerAndWin()
         {
-            if(isServer is false) return;
+            yield return new WaitForSecondsRealtime(delayFoundWinners);
+            if(isServer is false) yield break;
             
             foreach (var player in players)
             {
                 if (player.identity.TryGetComponent<Player>(out var playerObj))
                 {
+                    Debug.Log(playerObj.IsDead);
                     if (playerObj.IsDead is false)
                     {
-                        playerWin = playerObj;
-                        playerObj.RpcShowCanvas(playerObj.PlayerColor, playerObj.Coins);
+                        winner = new WinnerParams(playerObj.Coins, playerObj.PlayerColor);
+                        StartCoroutine(ShowCanvasAsync(playerObj));
+                        // continue;
                     }
 
-                    playerObj.RpcShowCanvas(playerWin.PlayerColor, playerWin.Coins);
+                    StartCoroutine(ShowCanvasAsync(playerObj));
                 }
             }
-        } 
+        }
+
+        private IEnumerator ShowCanvasAsync(Player player)
+        {
+            yield return new WaitForSecondsRealtime(delayFoundWinners);
+            player.RpcShowCanvas(winner.color,winner.countCoins);
+        }
+        
+        [Serializable]
+        private class WinnerParams
+        {
+            private WinnerParams(){}
+            public WinnerParams(int countCoins, Color color)
+            {
+                this.countCoins = countCoins;
+                this.color = color;
+            }
+
+            public int countCoins;
+            public Color color;
+        }
     }
 }
