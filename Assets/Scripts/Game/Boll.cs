@@ -31,7 +31,7 @@ namespace Game
                 {
                     if(other.gameObject.TryGetComponent<PlayerHealth>(out var player))
                     {
-                        player.MakeDamage(damage);
+                        player.RpcMakeDamage(damage);
                     }
                     NetworkServer.Destroy(gameObject);
                 }

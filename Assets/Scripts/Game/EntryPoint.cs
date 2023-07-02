@@ -30,8 +30,11 @@ namespace Game
         {
             yield return new WaitForSecondsRealtime(delayAddPlayer);
             if(playerClient.identity.TryGetComponent<Player>(out var playerDeath))
-            {
-                playerDeath.death.AddListener(() => StartCoroutine(FoundWinnerAndWin()));
+            { 
+                playerDeath.death.AddListener(() =>
+                {
+                    StartCoroutine(FoundWinnerAndWin());
+                });
             }
         }
 
@@ -44,12 +47,11 @@ namespace Game
             {
                 if (player.identity.TryGetComponent<Player>(out var playerObj))
                 {
-                    Debug.Log(playerObj.IsDead);
                     if (playerObj.IsDead is false)
-                    {
+                    {;
                         winner = new WinnerParams(playerObj.Coins, playerObj.PlayerColor);
                         StartCoroutine(ShowCanvasAsync(playerObj));
-                        // continue;
+                        continue;
                     }
 
                     StartCoroutine(ShowCanvasAsync(playerObj));
@@ -60,7 +62,7 @@ namespace Game
         private IEnumerator ShowCanvasAsync(Player player)
         {
             yield return new WaitForSecondsRealtime(delayFoundWinners);
-            player.RpcShowCanvas(winner.color,winner.countCoins);
+            player.RpcShowCanvas(winner.color, winner.countCoins);
         }
         
         [Serializable]

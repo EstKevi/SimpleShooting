@@ -21,35 +21,46 @@ namespace Game.playerScripts
         [SerializeField]private int coins;
         [SyncVar]
         [SerializeField] private bool isDead;
-
-        public int Coins => coins;
-        public bool IsDead => isDead;
-    
+        
         private Vector2 direction = new(0.5f,1);
         private float prShoot;
 
-        [NonSerialized] public UnityEvent death;
-
+        [NonSerialized] public readonly UnityEvent death = new();
+        
+        public int Coins => coins;
+        public bool IsDead => isDead;
+        
         public Color PlayerColor => playerColor.Color;
 
         private void Awake()
         {
-            death = playerHealth.playerDeath;
             joystick = FindObjectOfType<Joystick>();
             playerUi = FindObjectOfType<UiWinWindow>();
 
             playerUi.SetMaxHealthPlayer(playerHealth.Health);
             
-            death.AddListener(() =>
+            playerHealth.playerDeath.AddListener((() =>
             {
                 if(isLocalPlayer)
+                {
                     isDead = true;
-            });
-            
-            playerHealth.playerTakeDamage.AddListener(d =>
-            {
-                playerUi.UiValueHealth -= d;
-            });
+                    CmdPlayerDeath();
+                }
+            }));
+        }
+
+        [Command]
+        private void CmdPlayerDeath()
+        {
+            isDead = true;
+            death.Invoke();
+        }
+
+        [ClientRpc]
+        public void RpcChangeHealthUi(int damage)
+        {
+            if(isLocalPlayer);
+            playerUi.UiValueHealth -= damage;
         }
 
         private void Update()
@@ -82,10 +93,14 @@ namespace Game.playerScripts
             //     NetworkServer.Destroy(gameObject);
         }
 
-        public void TakeCoin()
+        [ClientRpc]
+        public void RpcTakeCoin()
         {
             coins++;
-            playerUi.CountCoin = coins;
+            if (isLocalPlayer)
+            {
+                playerUi.CountCoin = coins;
+            }
         }
     }
 }

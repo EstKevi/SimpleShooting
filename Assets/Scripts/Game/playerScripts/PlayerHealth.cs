@@ -7,8 +7,9 @@ namespace Game.playerScripts
 {
     public class PlayerHealth : NetworkBehaviour
     {
+        [SerializeField] private Player player;
+        
         [NonSerialized] public readonly UnityEvent playerDeath = new();
-        [NonSerialized] public readonly UnityEvent<int> playerTakeDamage = new();
 
         [SyncVar]
         [SerializeField] private int health;
@@ -18,17 +19,29 @@ namespace Game.playerScripts
 
         private void Awake() => maxHealth = health;
 
-        public void MakeDamage(int damage)
+        [ClientRpc]
+        public void RpcMakeDamage(int damage)
         {
-            health -= damage;
-            health = Mathf.Clamp(health, 0, maxHealth);
+            if (isServer)
+            {
+                player.RpcChangeHealthUi(damage);
+            }
             
-            playerTakeDamage.Invoke(damage);
+            if (!isLocalPlayer) return;
+            var heal = health;
+            heal -= damage;
+            heal = Mathf.Clamp(heal, 0, maxHealth);
+
+            health = heal;
+            CmdSetHealth(heal);
 
             if (health <= 0)
             {
                 playerDeath.Invoke();
             }
         }
+
+        [Command]
+        private void CmdSetHealth(int heal) => health = heal;
     }
 }

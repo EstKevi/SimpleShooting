@@ -25,7 +25,7 @@ namespace Game.playerScripts
             NetworkServer.Spawn(bollPrefab);
             
             if (bollPrefab.TryGetComponent<Boll>(out var isBoll))
-            {
+            { 
                 isBoll.Kick(direction, power,gameObject);
             }
             

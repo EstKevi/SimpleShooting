@@ -11,7 +11,7 @@ namespace Game
         {
             if (other.TryGetComponent<Player>(out var player) && isServer)
             {
-                player.TakeCoin();
+                player.RpcTakeCoin();
                 NetworkServer.Destroy(gameObject);
             }
         }
